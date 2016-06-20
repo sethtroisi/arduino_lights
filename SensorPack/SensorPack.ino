@@ -1,28 +1,33 @@
 #include <Wire.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
 #include <Adafruit_Sensor.h>
 #include <Adafruit_TSL2561_U.h>
 #include <Adafruit_MCP9808.h>
 
+
 #define PHOTORESISTOR_PIN   A0
 #define TMP_36_PIN          A1
 #define STATUS_LED_PIN      2
-#define BS18X20_PIN         3
 
+#define ONE_WIRE_BUS        3
+#define ONE_WIRE_SENSORS    1
+#define DS18B20_PRECISION   9
+
+// Approximate number of data points per minute.
 #define PER_MINUTE          6
  
-// Create the MCP9808 temperature sensor object.
-Adafruit_MCP9808 tempSensorMCP9808;
 
-// Create TSL2561 (or 91?) light sensor object.
+// Setup a oneWire instance to communicate with any OneWire devices
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature  oneWireTempSensors(&oneWire);
+DeviceAddress oneWireAddress[ONE_WIRE_SENSORS];
+
+Adafruit_MCP9808 tempSensorMCP9808;
 Adafruit_TSL2561_Unified lightSensorTSL2561(TSL2561_ADDR_FLOAT, 12345);
 
 
-
-/**************************************************************************/
-/*
-    Configures the gain and integration time for the TSL2561
-*/
-/**************************************************************************/
 void configureLightSensorTSL2561(void)
 {
   /* You can also manually set the gain or enable auto-gain support */
@@ -35,6 +40,37 @@ void configureLightSensorTSL2561(void)
   //.setIntegrationTime(TSL2561_INTEGRATIONTIME_101MS);  /* medium resolution and speed   */
   lightSensorTSL2561.setIntegrationTime(TSL2561_INTEGRATIONTIME_402MS);  /* 16-bit data but slowest conversions */
 }
+
+
+bool configureDS18B20(void) {
+  int numFound = oneWireTempSensors.getDeviceCount();
+  if (ONE_WIRE_SENSORS != numFound) {
+    Serial.print("ERROR: Found ");
+    Serial.print(numFound);
+    Serial.println(" one wire devices");
+    return false;
+  }
+
+  for (int i = 0; i < ONE_WIRE_SENSORS; i++) {
+    if (oneWireTempSensors.getAddress(oneWireAddress[i], i)) {
+      // set the resolution to TEMPERATURE_PRECISION bit (Each Dallas/Maxim device is capable of several different resolutions)
+      oneWireTempSensors.setResolution(oneWireAddress[i], DS18B20_PRECISION);
+      int resolution = oneWireTempSensors.getResolution(oneWireAddress[i]);
+      if (DS18B20_PRECISION != resolution) {
+        Serial.print("ERROR: Resolution set to ");
+        Serial.println(resolution);
+        return false;
+      }
+    } else {
+      Serial.print("Error: Found ghost device at ");
+      Serial.print(i);
+      Serial.print(" but could not detect address. Check power and cabling");
+      return false;
+    }
+  }
+  return true;
+}
+
 
 
 int getMilliVoltsAnalogPin(int pin) {
@@ -67,7 +103,7 @@ void shutdownAndBlinkHelp(const char* error) {
   }  
 }
 
-
+// /*
 void setup() {
   pinMode(PHOTORESISTOR_PIN, INPUT);
   pinMode(TMP_36_PIN, INPUT);
@@ -86,13 +122,19 @@ void setup() {
   if (!tempSensorMCP9808.begin()) {
     shutdownAndBlinkHelp("Couldn't find TempSensor (MCP9808)!");
   }
-  if(!lightSensorTSL2561.begin())
-  {
+
+  if (lightSensorTSL2561.begin()) {
+    configureLightSensorTSL2561();
+  } else  {
     shutdownAndBlinkHelp("Couldn't find LightSensor (TSL2561)");
   }
 
-  configureLightSensorTSL2561();
+  oneWireTempSensors.begin();
+  if (!configureDS18B20()) {
+    shutdownAndBlinkHelp("Couldn't configure OneWireSensors (DS18b20)");
+  }
 }
+
 
 void loop() {
   // Tempurate Sensors
@@ -110,6 +152,18 @@ void loop() {
     Serial.print("TMP36: ");
     Serial.print(tempTMP36);
     Serial.println("*C");
+
+
+    // OneWire DS18B20 sensors.
+    oneWireTempSensors.requestTemperatures(); // Send the command to get temperatures
+    for(int i = 0; i < ONE_WIRE_SENSORS; i++) {
+      float tempDS18B20 = oneWireTempSensors.getTempC(oneWireAddress[i]);
+      Serial.print("DS18B20(");
+      Serial.print(i);
+      Serial.print("): ");
+      Serial.print(tempDS18B20);
+      Serial.println("*C");
+    }
   }
 
   // Light Sensors
@@ -138,149 +192,3 @@ void loop() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-
-
-
-
-#include <OneWire.h>
-#include <DallasTemperature.h>
-
-// Data wire is plugged into port 2 on the Arduino
-#define ONE_WIRE_BUS 3
-#define TEMPERATURE_PRECISION 9
-
-// Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
-OneWire oneWire(ONE_WIRE_BUS);
-// Pass our oneWire reference to Dallas Temperature. 
-DallasTemperature  (&oneWire);
-
-int numberOfDevices; // Number of temperature devices found
-
-DeviceAddress tempDeviceAddress; // We'll use this variable to store a found device address
-
-void setup(void)
-{
-  // start serial port
-  Serial.begin(9600);
-  Serial.println("Dallas Temperature IC Control Library Demo");
-
-  // Start up the library
-  sensors.begin();
-  
-  // Grab a count of devices on the wire
-  numberOfDevices = sensors.getDeviceCount();
-  
-  // locate devices on the bus
-  Serial.print("Locating devices...");
-  
-  Serial.print("Found ");
-  Serial.print(numberOfDevices, DEC);
-  Serial.println(" devices.");
-
-  // report parasite power requirements
-  Serial.print("Parasite power is: "); 
-  if (sensors.isParasitePowerMode()) Serial.println("ON");
-  else Serial.println("OFF");
-  
-  // Loop through each device, print out address
-  for(int i=0;i<numberOfDevices; i++)
-  {
-    // Search the wire for address
-    if(sensors.getAddress(tempDeviceAddress, i))
-	{
-		Serial.print("Found device ");
-		Serial.print(i, DEC);
-		Serial.print(" with address: ");
-		printAddress(tempDeviceAddress);
-		Serial.println();
-		
-		Serial.print("Setting resolution to ");
-		Serial.println(TEMPERATURE_PRECISION, DEC);
-		
-		// set the resolution to TEMPERATURE_PRECISION bit (Each Dallas/Maxim device is capable of several different resolutions)
-		sensors.setResolution(tempDeviceAddress, TEMPERATURE_PRECISION);
-		
-		 Serial.print("Resolution actually set to: ");
-		Serial.print(sensors.getResolution(tempDeviceAddress), DEC); 
-		Serial.println();
-	}else{
-		Serial.print("Found ghost device at ");
-		Serial.print(i, DEC);
-		Serial.print(" but could not detect address. Check power and cabling");
-	}
-  }
-
-}
-
-// function to print the temperature for a device
-void printTemperature(DeviceAddress deviceAddress)
-{
-  // method 1 - slower
-  //Serial.print("Temp C: ");
-  //Serial.print(sensors.getTempC(deviceAddress));
-  //Serial.print(" Temp F: ");
-  //Serial.print(sensors.getTempF(deviceAddress)); // Makes a second call to getTempC and then converts to Fahrenheit
-
-  // method 2 - faster
-  float tempC = sensors.getTempC(deviceAddress);
-  Serial.print("Temp C: ");
-  Serial.print(tempC);
-  Serial.print(" Temp F: ");
-  Serial.println(DallasTemperature::toFahrenheit(tempC)); // Converts tempC to Fahrenheit
-}
-
-void loop(void)
-{ 
-  // call sensors.requestTemperatures() to issue a global temperature 
-  // request to all devices on the bus
-  Serial.print("Requesting temperatures...");
-  sensors.requestTemperatures(); // Send the command to get temperatures
-  Serial.println("DONE");
-  
-  
-  // Loop through each device, print out temperature data
-  for(int i=0;i<numberOfDevices; i++)
-  {
-    // Search the wire for address
-    if(sensors.getAddress(tempDeviceAddress, i))
-	{
-		// Output the device ID
-		Serial.print("Temperature for device: ");
-		Serial.println(i,DEC);
-		
-		// It responds almost immediately. Let's print out the data
-		printTemperature(tempDeviceAddress); // Use a simple function to print out the data
-	} 
-	//else ghost device! Check your power requirements and cabling
-	
-  }
-  delay(1000);
-}
-
-// function to print a device address
-void printAddress(DeviceAddress deviceAddress)
-{
-  for (uint8_t i = 0; i < 8; i++)
-  {
-    if (deviceAddress[i] < 16) Serial.print("0");
-    Serial.print(deviceAddress[i], HEX);
-  }
-}
-
-*/
