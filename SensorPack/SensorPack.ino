@@ -107,7 +107,7 @@ void loop() {
 
 
     float tempTMP36 = TMP36ReadTempC();    
-    Serial.print("TMP36:");
+    Serial.print("TMP36: ");
     Serial.print(tempTMP36);
     Serial.println("*C");
   }
@@ -125,12 +125,12 @@ void loop() {
     }
 
 
-    float lightPhotoresistor = getMilliVoltsAnalogPin(PHOTORESISTOR_PIN);
+    int lightPhotoresistor = getMilliVoltsAnalogPin(PHOTORESISTOR_PIN);
     Serial.print("Photoresistor: ");
     Serial.print(lightPhotoresistor);
     Serial.println(" mv");
-
   }
+
   Serial.println();
 
   int delayMS = 60000 / PER_MINUTE;
