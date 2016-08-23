@@ -1,12 +1,9 @@
 #include <assert.h>
 #include <Adafruit_NeoPixel.h>
-#ifdef __AVR__
-  #include <avr/power.h>
-#endif
 
-#define PIN 6
+#define PIN 9
 #define LEDS 150
-#define BRIGHTNESS 10
+#define BRIGHTNESS 25
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -24,13 +21,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(LEDS, PIN, NEO_GRB + NEO_KHZ800);
 // on a live circuit...if you must, connect GND first.
 
 void setup() {
-  // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
-  #if defined (__AVR_ATtiny85__)
-    if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
-  #endif
-  // End of trinket special code
-
-  if (LEDS * BRIGHTNESS * 0.01 * 0.05 > .8) {
+  if (LEDS * BRIGHTNESS * 1.0 / 255 * 0.04 > .8) {
     strip.setBrightness(2);     
   } else {
     strip.setBrightness(BRIGHTNESS);
@@ -41,21 +32,24 @@ void setup() {
 }
 
 void loop() {
-  /*
+//*
   // Some example procedures showing how to display to the pixels:
-  colorWipe(strip.Color(255, 0, 0), 50); // Red
-  colorWipe(strip.Color(0, 255, 0), 50); // Green
-  colorWipe(strip.Color(0, 0, 255), 50); // Blue
-//colorWipe(strip.Color(0, 0, 0, 255), 50); // White RGBW
+  colorWipe(strip.Color(255, 0, 0),     50); // Red
+  colorWipe(strip.Color(0, 255, 0),     50); // Green
+  colorWipe(strip.Color(0, 0, 255),     50); // Blue
+  colorWipe(strip.Color(255, 255, 255), 50); // White RGBW
+// */
+
+//*
   // Send a theater pixel chase in...
-  theaterChase(strip.Color(127, 127, 127), 50); // White
-  theaterChase(strip.Color(127, 0, 0), 50); // Red
-  theaterChase(strip.Color(0, 0, 127), 50); // Blue
-*/
+  theaterChase(strip.Color(127, 127, 127), 80,  5); // White
+  theaterChase(strip.Color(127, 0, 0),     80,  5); // Red
+  theaterChase(strip.Color(0, 0, 127),     80,  5); // Blue
+  colorWipe(strip.Color(255, 255, 255), 50); // White RGBW
+//*/
 
 //  rainbow(50);
   rainbowCycle(60);
- 
 }
 
 // Fill the dots one after the other with a color
@@ -93,18 +87,18 @@ void rainbowCycle(uint8_t wait) {
 }
 
 //Theatre-style crawling lights.
-void theaterChase(uint32_t c, uint8_t wait) {
+void theaterChase(uint32_t c, uint8_t wait, uint8_t dist) {
   for (int j=0; j<10; j++) {  //do 10 cycles of chasing
-    for (int q=0; q < 3; q++) {
-      for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
+    for (int q=0; q < dist; q++) {
+      for (uint16_t i=0; i < strip.numPixels(); i += dist) {
         strip.setPixelColor(i+q, c);    //turn every third pixel on
       }
       strip.show();
 
       delay(wait);
 
-      for (uint16_t i=0; i < strip.numPixels(); i=i+3) {
-        strip.setPixelColor(i+q, 0);        //turn every third pixel off
+      for (uint16_t i=0; i < strip.numPixels(); i += 1) {
+        strip.setPixelColor(i+q, 0);        //turn every pixel off
       }
     }
   }
