@@ -16,7 +16,7 @@
 #define DS18B20_PRECISION   9
 
 // Approximate number of data points per minute.
-#define PER_MINUTE          6
+#define PER_MINUTE          3
  
 
 // Setup a oneWire instance to communicate with any OneWire devices
@@ -145,13 +145,13 @@ void loop() {
     tempSensorMCP9808.shutdown_wake(0);   
     Serial.print("MCP9808: ");
     Serial.print(tempMCP9808);
-    Serial.println("*C");
+    Serial.println(" *C");
 
 
     float tempTMP36 = TMP36ReadTempC();    
     Serial.print("TMP36: ");
     Serial.print(tempTMP36);
-    Serial.println("*C");
+    Serial.println(" *C");
 
 
     // OneWire DS18B20 sensors.
@@ -162,7 +162,7 @@ void loop() {
       Serial.print(i);
       Serial.print("): ");
       Serial.print(tempDS18B20);
-      Serial.println("*C");
+      Serial.println(" *C");
     }
   }
 
