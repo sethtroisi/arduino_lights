@@ -1,11 +1,12 @@
 #include <Adafruit_NeoPixel.h>
+#include <string>
 
 #define PIN_NUMBER 9
 
 #define NUM_LIGHTS 50
-#define BRIGHTNESS 80
+#define BRIGHTNESS 40
 
-#define DEBUG true
+#define DEBUG false
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -32,15 +33,12 @@ void setup() {
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
 
-  delay(1000);
+//  delay(1000);
 
   showHello(1);
 
-  Serial.begin(57600);
-  Serial.println("Welcome to StrandClient");
-
-  // "Flush any serial data"
-  while (Serial.peek() > 0) { Serial.read(); };
+  Serial.begin(9600);
+//  Serial.println("Welcome to StrandClient");
 
   showHello(2);
   
@@ -48,8 +46,20 @@ void setup() {
   next_lights = B;
 }
 
+char buffer[11] = {};
+int buffI = 0
 void loop() {
-  readSomeLights();
+//  readSomeSerial();
+
+  // echo program
+  
+  if (buffI == 10) {
+    serial.println(buffer)
+    buffI = 0;
+  }
+
+  buffer[buffI] = blockingSerialRead();
+  buffI++;
 }
 
 
@@ -80,6 +90,11 @@ void showHello(uint16_t hello_status) {
   delay(5000);
 }
 
+void setAndShow(uint16_t i, uint32_t c) {
+  strip.setPixelColor(i, c);
+  strip.show();
+}
+
 
 void assert(bool res, uint16_t label) {
   if (!res) {
@@ -97,27 +112,69 @@ void setLightsBlack(uint32_t *which) {
   assert(which == A || which == B, 10);
   
   for (int i = 0; i < NUM_LIGHTS; i++) {
-    which[i] = 0;
+    which[i] = strip.Color(0, 0, 0);
   }
 }
 
 
-bool readSomeLights() {
-  // Clear what ever is not current and
-  assert(current_lights != next_lights, 11);
-  // TODO all sorts of zero length encoding, paletting, ... other compressions in the future!
-  
-  // Look for magic start of stream command (112, 35, 8, X)
-  while (Serial.available() > 5) {
-    Serial.println("Starting readSomeLights, available: ");
-    Serial.println(Serial.available());
+void showLights(uint32_t *which) {
+  assert(which == A || which == B, 11);
 
-    int first = Serial.read();
-    if (first != 112) {
+  for(uint16_t i = 0; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, which[i]);
+  }
+  strip.show();
+  delay(10);
+}
+
+
+bool readSomeSerial() {
+  // Clear what ever is not current and
+//  assert(current_lights != next_lights, 12);
+
+  // TODO all sorts of zero length encoding, paletting, ... other compressions in the future!
+
+  uint16_t iter = 0;
+  while (true) {
+    setAndShow(0, strip.Color(0,0,iter % 256));
+    flushTillMagic();
+    setAndShow(0, strip.Color(0,255,iter % 256));
+    iter++;
+
+    uint8_t index = blockingSerialRead();
+    uint32_t serial_color = readColor();
+
+    setAndShow(index + 1, serial_color);
+
+  }
+}
+
+uint32_t readColor() {
+ return strip.Color(blockingSerialRead(), blockingSerialRead(), blockingSerialRead());
+}
+
+
+uint32_t blockingSerialRead() { 
+  while (Serial.available() < 1) {
+    delayMicroseconds(1);
+  }
+  
+  return Serial.read();
+}
+
+void flushTillMagic() {
+  // Look for magic start of stream command (3, 5, 8, 13)
+  while (true) {
+    if (Serial.available() < 4) {
       continue;
     }
 
-    if (Serial.peek() != 35) {
+    int first = Serial.read();
+    if (first != 3) {
+      continue;
+    }
+
+    if (Serial.peek() != 5) {
       continue;
     }
     Serial.read();
@@ -126,75 +183,14 @@ bool readSomeLights() {
       continue;
     }
     Serial.read();
-  }
 
-  // Data should be alligned
-  uint32_t data_size;
-  if (!readUnsignedInt(&data_size)) {
-    return false;
-  }
 
-  if ((data_size < 0) || (data_size % 3 != 0) || (data_size <= 3 * NUM_LIGHTS)) {
-    return false;
-  }
-  
-  setLightsBlack(next_lights);
-  
-  for (int i = 0; i <= data_size / 3; i++) {
-    next_lights[i] = readColor();
-  }
-  
-  uint32_t *temp = current_lights;
-  current_lights = next_lights;
-  next_lights = temp;
-  
-  if (DEBUG) {
-    Serial.print("Data_size: ");
-    Serial.println(data_size);
-    
-    for (int i = 0; i <= data_size / 3; i++) {
-      Serial.print("RGB Color(");
-      Serial.print(i);
-      Serial.print("): ");
-      Serial.print(current_lights[i]);
+    if (Serial.peek() != 13) {
+      continue;
     }
+    Serial.read();
+    
+    // Magic key found!
+    return;
   }
 }
-
-
-bool readUnsignedInt(uint32_t *out_value) {
-  if (Serial.available() <= 3) {
-    return false;
-  }
-
-  *out_value = (Serial.read() << 24) \
-      | (Serial.read() << 16) \
-      | (Serial.read() << 8) \
-      | Serial.read();
-
-  return true;
-}
-
-
-uint32_t readColor() {
- return strip.Color(Serial.read(), Serial.read(), Serial.read());
-}
-
-
-/*
-void loop() {
-  // Some example procedures showing how to display to the pixels:
-  colorWipe(strip.Color(255, 0, 0), 15); // Red
-  colorWipe(strip.Color(0, 255, 0), 15); // Green
-  colorWipe(strip.Color(0, 0, 255), 15); // Blue
-}
-
-// Fill the dots one after the other with a color
-void colorWipe(uint32_t c, uint8_t wait) {
-  for(uint16_t i=0; i<strip.numPixels(); i++) {
-    strip.setPixelColor(i, c);
-    strip.show();
-    delay(wait);
-  }
-}
-*/
