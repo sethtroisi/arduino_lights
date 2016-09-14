@@ -3,11 +3,7 @@
 #define PIN_NUMBER 3
 #define NUM_LIGHTS 300
 #define BRIGHTNESS 32
-
-
-#define START_LED 0
-#define END_LED 0
-
+#define DELAY_MS 90
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN_NUMBER, NEO_GRB + NEO_KHZ800);
 
@@ -37,20 +33,7 @@ void setup() {
 
 int iteration = 0;
 void loop() {
-  for (int led_index = START_LED; led_index < END_LED; led_index += 1) {
-    strip.setPixelColor(led_index, GREEN);
-    
-    if (led_index % 5 == 0) {
-      if (iteration % 2 == 0) {
-        strip.setPixelColor(led_index, RED);
-      } else {
-        strip.setPixelColor(led_index, BLUE);
-      }
-    }
-  }
-  strip.show();
-
-  for (int i = 0; i < 20 * 5; i++) {
+  for (int i = 0; i < 10000; i++) {
     // We run tracers around the circles a couple of times
 
     // C magic to determine how many elements are in the list.
@@ -60,22 +43,18 @@ void loop() {
       int end_index = end_circle_index[circle];
       int num_leds = end_index - start_index + 1; // Math for fenceposts says "add one"
 
-      for (int j = start_index; j < end_index; j++) {
+      for (int j = start_index; j <= end_index; j++) {
         strip.setPixelColor(j, BLACK);
-      }
-
-      strip.setPixelColor(start_index, PURPLE);
-      strip.setPixelColor(end_index, PURPLE);
-
-      // Which LED in the circle to light up.
-      int current_circle_index = i % num_leds;
+            }
+      for (int j = start_index+(i%5); j <= end_index; j+=5) {
+              strip.setPixelColor(j, PURPLE);
+            }
       
-      strip.setPixelColor(start_index + current_circle_index, WHITE);
     }
 
     strip.show(); 
 
-    delay(50);
+    delay(DELAY_MS);
   }
   
   iteration += 1;
