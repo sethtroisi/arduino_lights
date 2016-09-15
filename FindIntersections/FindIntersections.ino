@@ -17,6 +17,10 @@ int intersections[][6] = {
 int snakes [] = {
   10,
   20,
+  30,
+  40,
+  50,
+  60,
   70,
 };
 
@@ -109,7 +113,7 @@ void loop() {
       }
 
       // Turn on the new led!
-      strip.setPixelColor(next_led, fun_colors[snake_index]);
+      strip.setPixelColor(next_led, fun_colors[snake_index % num_elements(fun_colors)]);
       snakes[snake_index] = next_led;
       can_jump[snake_index] += 1;
     }
