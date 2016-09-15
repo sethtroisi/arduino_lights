@@ -1,16 +1,17 @@
 #include <Adafruit_NeoPixel.h>
 
 #define PIN_NUMBER 3
-#define NUM_LIGHTS 150
+#define NUM_LIGHTS 300
 #define BRIGHTNESS 32
 
-#define DELAY_MS 25
+#define DELAY_MS 35
 
 #define num_elements(x)  (sizeof(x) / sizeof((x)[0]))
 
 int intersections[][6] = {
-  {  15,  16,  91,  92},
-  {  29,  30, 107, 108, 109},
+  {  1,  69,  70,  141, 298},
+  {  102,  169, 170, 239, 241},
+  {  37, 202, 269, 270},
 };
 
 
@@ -32,7 +33,7 @@ uint32_t PURPLE = strip.Color(32, 0, 88);
 uint32_t BLACK  = strip.Color(0, 0, 0);
 uint32_t WHITE  = strip.Color(255, 255, 255);
 
-uint32_t fun_colors[] = {RED, GREEN, BLUE, PURPLE, BLACK, WHITE};
+uint32_t fun_colors[] = {PURPLE, WHITE, GREEN, PURPLE, BLACK, WHITE};
 
 void setup() {
   strip.setBrightness(BRIGHTNESS);

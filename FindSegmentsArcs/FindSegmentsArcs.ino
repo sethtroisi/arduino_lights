@@ -22,10 +22,10 @@ uint32_t WHITE  = strip.Color(255, 255, 255);
 
 
 // List (called Array in C) containing index of the first LED in each circle
-int start_circle_index[] = {0, 70, 170}; // to extend use this format {5, 65, 140};
+int start_circle_index[] = {141, 241, 270}; // to extend use this format {5, 65, 140};
 
 // List containing index index of the last LED in each cirle
-int end_circle_index[] = {69, 139, 239};
+int end_circle_index[] = {169, 269, 298};
 
 
 void setup() {
@@ -75,7 +75,7 @@ void loop() {
 
     strip.show(); 
 
-    delay(50);
+    delay(200);
   }
   
   iteration += 1;
