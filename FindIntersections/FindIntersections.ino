@@ -18,8 +18,19 @@ int intersections[][6] = {
 int snakes [] = {
   10,
   20,
+  30,
+  40,
+  50,
+  60,
   70,
 };
+
+int can_jump[] = {
+  0,
+  0,
+  0,
+};
+
 
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN_NUMBER, NEO_GRB + NEO_KHZ800);
@@ -65,10 +76,13 @@ void loop() {
 
 
   for (int f = 0; f < 10000; f++) {
+
     int num_snakes = num_elements(snakes);
     for (int snake_index = 0; snake_index < num_snakes; snake_index += 1) {
+      // For each snake
       int current_led = snakes[snake_index];
 
+      // Turn off it's current led.
       strip.setPixelColor(current_led, BLACK);
 
       int next_led = (current_led + 1) % NUM_LIGHTS;
@@ -77,25 +91,32 @@ void loop() {
       int n_i = num_elements(intersections);
       for (int i_index = 0; i_index < n_i; i_index += 1) {
         int *i_points = intersections[i_index];
-        for (int j = 0; i_points[j] > 0; j++) {
+          
+        for (int j = 0; j < i_points[j] > 0; j++) {
           int led_index = i_points[j];
-
+  
           if (led_index == current_led) {
             // This led is part of an intersection
-            // 50% of the time jump to one of the other LEDS in the intersection 
-            if (random(0,2) == 0) {
-              if (j == 0) {
-                next_led = i_points[1] + 2; // move out of the intersection
-              } else {
-                next_led = i_points[j - 1] + 2;
+            // If the light hasn't jumped recently then
+            // 50% of the time jump to one of the other LEDS in the intersection.
+            if (can_jump[snake_index] > 0 && random(2) == 0) {
+              for (int k = 0; i_points[k] > 0; k += 1) {
+                // Find an led that's not on this "strand" (ie not an adjacent led)
+                int test_led = i_points[k];
+                if (abs(current_led - test_led) > 3) {
+                  next_led = test_led;
+                  can_jump[snake_index] = -10; // Don't jump for a while
+                }
               }
             }
           }
         }
       }
 
-      strip.setPixelColor(next_led, fun_colors[snake_index]);
+      // Turn on the new led!
+      strip.setPixelColor(next_led, fun_colors[snake_index % num_elements(fun_colors)]);
       snakes[snake_index] = next_led;
+      can_jump[snake_index] += 1;
     }
 
     strip.show();
