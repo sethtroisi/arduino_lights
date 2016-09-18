@@ -5,6 +5,8 @@
 #define NUM_LIGHTS  LIGHT_CONFIG_NUM_LIGHTS
 #define BRIGHTNESS  LIGHT_CONFIG_BRIGHTNESS
 
+// TODO(ERIN): move to LIGHT_CONFIG
+#define NUM_SNAKES  10
 #define DELAY_MS    35
 
 #define num_elements(x)  (sizeof(x) / sizeof((x)[0]))
@@ -12,22 +14,8 @@
 int intersections[][6] = LIGHT_CONFIG_INTERSECTIONS
 
 
-int snakes [] = {
-  10,
-  20,
-  30,
-  40,
-  50,
-  60,
-  70,
-};
-
-int can_jump[] = {
-  0,
-  0,
-  0,
-};
-
+int snakes [NUM_SNAKES] = {};
+int can_jump[NUM_SNAKES] = {};
 
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN_NUMBER, NEO_GRB + NEO_KHZ800);
@@ -36,7 +24,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN_NUMBER, NEO_GRB + NE
 uint32_t RED    = strip.Color(255, 0, 0);
 uint32_t GREEN  = strip.Color(0, 255, 0);
 uint32_t BLUE   = strip.Color(0, 0, 255);
-uint32_t PURPLE = strip.Color(32, 0, 88);
+uint32_t PURPLE = strip.Color(80, 0, 220);
 
 uint32_t BLACK  = strip.Color(0, 0, 0);
 uint32_t WHITE  = strip.Color(255, 255, 255);
