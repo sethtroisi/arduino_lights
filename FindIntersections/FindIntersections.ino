@@ -1,18 +1,15 @@
 #include <Adafruit_NeoPixel.h>
+#include <LightConfig.h>
 
-#define PIN_NUMBER 3
-#define NUM_LIGHTS 300
-#define BRIGHTNESS 32
+#define PIN_NUMBER  LIGHT_CONFIG_PIN_NUM
+#define NUM_LIGHTS  LIGHT_CONFIG_NUM_LIGHTS
+#define BRIGHTNESS  LIGHT_CONFIG_BRIGHTNESS
 
-#define DELAY_MS 35
+#define DELAY_MS    35
 
 #define num_elements(x)  (sizeof(x) / sizeof((x)[0]))
 
-int intersections[][6] = {
-  {  1,  69,  70,  141, 298},
-  {  102,  169, 170, 239, 241},
-  {  37, 202, 269, 270},
-};
+int intersections[][6] = LIGHT_CONFIG_INTERSECTIONS
 
 
 int snakes [] = {
