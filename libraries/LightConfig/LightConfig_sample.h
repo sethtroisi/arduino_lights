@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*! 
+/*
     @file     LightConfig.h
     @author   Seth T. & Eric D.
 
@@ -9,10 +9,18 @@
     It's small things like this that keep our code together.
 
     See https://gist.github.com/canton7/1423106 for original idea
-
-    After changing this file run
-    git update-index --assume-unchanged libraries/LightConfig/LightConfig.h
 */
 /**************************************************************************/
 
-#include "LightConfig_sample.h"
+#define LIGHT_CONFIG_PIN_NUM		X
+
+#define LIGHT_CONFIG_NUM_LIGHTS		XXX
+#define LIGHT_CONFIG_BRIGHTNESS		XX
+
+
+#define LIGHT_CONFIG_INTERSECTIONS {\
+  {  AA, EEE},\
+  {  BB, FFF},\
+  {  CC, GGG},\
+  {  DD, HHH},\
+};
