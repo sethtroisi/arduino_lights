@@ -5,7 +5,7 @@
 
 #define BRIGHTNESS 255
 
-#define DELAY_MS 55
+#define DELAY_MS 85
 #define FADE_INTERVALS 20
 
 
@@ -49,7 +49,7 @@ uint32_t LinearColorFade(uint32_t color_a, uint32_t color_b, float percent) {
   int16_t new_g = round(g_a + g_diff * percent);
   int16_t new_b = round(b_a + b_diff * percent);
 
-  return Adafruit_NeoPixel::Color(new_r, new_g, new_b);
+  return strip.Color(new_r, new_g, new_b);
 }
 
 // Walk from 0 to (distance-1) then back to 0
