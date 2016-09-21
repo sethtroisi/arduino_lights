@@ -25,7 +25,7 @@ uint32_t WHITE  = strip.Color(255, 255, 255);
 int start_circle_index[] = {0, 70, 170}; // to extend use this format {5, 65, 140};
 
 // List containing index index of the last LED in each cirle
-int end_circle_index[] = {69, 139, 202};
+int end_circle_index[] = {69, 139, 239};
 
 
 void setup() {
@@ -50,7 +50,7 @@ void loop() {
   }
   strip.show();
 
-  for (int i = 0; i < 20 * 5; i++) {
+  for (int i = 0; i < 2000 * 5; i++) {
     // We run tracers around the circles a couple of times
 
     // C magic to determine how many elements are in the list.
@@ -75,7 +75,7 @@ void loop() {
 
     strip.show(); 
 
-    delay(50);
+    delay(75);
   }
   
   iteration += 1;

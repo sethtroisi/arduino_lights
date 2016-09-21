@@ -1,9 +1,15 @@
 #include <Adafruit_NeoPixel.h>
 #include <LightConfig.h>
 
+<<<<<<< Updated upstream
 #define PIN_NUMBER  LIGHT_CONFIG_PIN_NUM
 #define NUM_LIGHTS  LIGHT_CONFIG_NUM_LIGHTS
 #define BRIGHTNESS  LIGHT_CONFIG_BRIGHTNESS
+=======
+#define PIN_NUMBER 3
+#define NUM_LIGHTS 300
+#define BRIGHTNESS 100
+>>>>>>> Stashed changes
 
 // TODO(ERIN): move to LIGHT_CONFIG
 #define NUM_SNAKES  10
@@ -22,6 +28,8 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN_NUMBER, NEO_GRB + NE
 
 // Definition of some Colors which are used multiple times
 uint32_t RED    = strip.Color(255, 0, 0);
+uint32_t YELLOW    = strip.Color(255, 255, 0);
+uint32_t ORANGE    = strip.Color(255, 165, 0);
 uint32_t GREEN  = strip.Color(0, 255, 0);
 uint32_t BLUE   = strip.Color(0, 0, 255);
 uint32_t PURPLE = strip.Color(80, 0, 220);
@@ -29,7 +37,7 @@ uint32_t PURPLE = strip.Color(80, 0, 220);
 uint32_t BLACK  = strip.Color(0, 0, 0);
 uint32_t WHITE  = strip.Color(255, 255, 255);
 
-uint32_t fun_colors[] = {PURPLE, WHITE, GREEN, PURPLE, BLACK, WHITE};
+uint32_t fun_colors[] = {RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, BLACK, WHITE};
 
 void setup() {
   strip.setBrightness(BRIGHTNESS);
