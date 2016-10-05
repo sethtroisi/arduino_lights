@@ -6,9 +6,9 @@
 #define BRIGHTNESS  LIGHT_CONFIG_BRIGHTNESS
 
 // TODO(ERIN): move to LIGHT_CONFIG
-#define NUM_SNAKES  6
+#define NUM_SNAKES  8
 #define TAILS       7
-#define DELAY_MS    35
+#define DELAY_MS    50
 
 #define num_elements(x)  (sizeof(x) / sizeof((x)[0]))
 
@@ -33,11 +33,11 @@ uint32_t PURPLE   = strip.Color(80, 0, 220);
 uint32_t BLACK  = strip.Color(0, 0, 0);
 uint32_t WHITE  = strip.Color(255, 255, 255);
 
-uint32_t fun_colors[] = {YELLOW, GREEN, BLUE, PURPLE, WHITE};
+uint32_t fun_colors[] = {YELLOW, GREEN, PURPLE, WHITE};
 
 void setup() { 
   for (int s = 0; s < NUM_SNAKES; s++) {
-    snake_location[s] = 0;
+    snake_location[s] = 50*s;
     snake_direction[s] = 1;
     snake_can_jump[s] = 0;
 
