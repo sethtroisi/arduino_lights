@@ -1,7 +1,7 @@
 /**************************************************************************/
 /*! 
     @file     LightConfig.h
-    @author   Seth T. & Eric D.
+    @author   Seth T. & Erin D.
 
     This is a library for compromise.
     One of us likes to have 150 lights. One of us prefers 300.
@@ -15,4 +15,4 @@
 */
 /**************************************************************************/
 
-#include "LightConfig_sample.h"
+#include "LightConfig_erin.h”
