@@ -23,17 +23,10 @@ short snake_tails[NUM_SNAKES][TAILS] = {};
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN_NUMBER, NEO_GRB + NEO_KHZ800);
 
 // Definition of some Colors which are used multiple times
-uint32_t RED      = strip.Color(255, 0, 0);
-uint32_t YELLOW   = strip.Color(255, 255, 0);
-uint32_t ORANGE   = strip.Color(255, 165, 0);
-uint32_t GREEN    = strip.Color(0, 255, 0);
-uint32_t BLUE     = strip.Color(0, 0, 255);
-uint32_t PURPLE   = strip.Color(80, 0, 220);
+#include <Colors.h>
 
-uint32_t BLACK  = strip.Color(0, 0, 0);
-uint32_t WHITE  = strip.Color(255, 255, 255);
+uint32_t fun_colors[] = {PLUM, BERRY, SKY};
 
-uint32_t fun_colors[] = {YELLOW, GREEN, PURPLE, WHITE};
 
 void setup() { 
   for (int s = 0; s < NUM_SNAKES; s++) {
