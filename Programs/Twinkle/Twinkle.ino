@@ -28,8 +28,6 @@ void setup() {
 
 void loop() {
 
-  strip.clear();
-  for (int f = 0; f < 10000; f++) {
     for (int t = 0; t < NUM_TWINKLES; t += 1) {
       // Set a "twinkle" at random points on twinkle_location for each pass of loop
       int set_twinkle = random(NUM_LIGHTS);
@@ -50,4 +48,4 @@ void loop() {
      }
      delay(random(MAX_DELAY_MS)); 
   }
-}
+
