@@ -1,18 +1,20 @@
 #include <Adafruit_NeoPixel.h>
 #include <LightConfig.h>
+#include <Colors.h>
 
 #define PIN_NUMBER  LIGHT_CONFIG_PIN_NUM
 #define NUM_LIGHTS  LIGHT_CONFIG_NUM_LIGHTS
 #define BRIGHTNESS  LIGHT_CONFIG_BRIGHTNESS
 
 // TODO(ERIN): move to LIGHT_CONFIG
-#define NUM_SNAKES  8
+#define NUM_SNAKES  9
 #define TAILS       7
 #define DELAY_MS    50
 
 #define num_elements(x)  (sizeof(x) / sizeof((x)[0]))
 
-short intersections[][6] = LIGHT_CONFIG_INTERSECTIONS
+//allows us to have up to 10 intersections with up to 8 points in each one
+short intersections[10][8] = LIGHT_CONFIG_INTERSECTIONS
 
 int snake_location[NUM_SNAKES] = {};
 int snake_direction[NUM_SNAKES] = {};
@@ -22,8 +24,6 @@ short snake_tails[NUM_SNAKES][TAILS] = {};
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN_NUMBER, NEO_GRB + NEO_KHZ800);
 
-// Definition of some Colors which are used multiple times
-#include <Colors.h>
 
 uint32_t fun_colors[] = {PLUM, BERRY, SKY};
 
@@ -41,7 +41,6 @@ void setup() {
   
   strip.setBrightness(BRIGHTNESS);
   strip.begin();
-  
   strip.clear();
   strip.show(); // Initialize all pixels to 'off'
 }
@@ -69,11 +68,9 @@ void loop() {
 
   strip.clear();
   for (int f = 0; f < 10000; f++) {
-    int num_snakes = num_elements(snake_location);
-    for (int snake_index = 0; snake_index < num_snakes; snake_index += 1) {
+    for (int snake_index = 0; snake_index < NUM_SNAKES; snake_index += 1) {
       // For each snake
       int current_led = snake_location[snake_index];
-
       int dir = snake_direction[snake_index];
       int next_led = (current_led + dir) % NUM_LIGHTS;
       // C allows negative on modulo.
@@ -82,11 +79,10 @@ void loop() {
       }
 
       // see if this is an intersection
-      int n_i = num_elements(intersections);
-      for (int i_index = 0; i_index < n_i; i_index += 1) {
+      for (int i_index = 0; i_index < num_elements(intersections); i_index += 1) {
         short *i_points = intersections[i_index];
           
-        for (int j = 0; j < i_points[j] > 0; j++) {
+        for (int j = 0; i_points[j] > 0; j++) {
           if (i_points[j] == current_led) {
             // This led is part of an intersection
             // If the light hasn't jumped recently then
