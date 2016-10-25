@@ -41,11 +41,13 @@ void loop() {
           uint32_t picker = random(num_elements(all_colors););
           uint32_t light_color = all_colors[picker];
           strip.setPixelColor(l, light_color);
-          strip.show();
           delay(TWINKLE_LENGTH_MS);
+          twinkle_location[l] = 0;
+        } else {
           strip.setPixelColor(l, BLACK);
         }
-        delay(random(MAX_DELAY_MS));  
+        strip.show(); 
      }
+     delay(random(MAX_DELAY_MS)); 
   }
 }
