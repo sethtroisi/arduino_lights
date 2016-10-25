@@ -32,5 +32,7 @@ uint32_t PLUM   = strip.Color(150, 0, 204);
 uint32_t BERRY   = strip.Color(219, 0, 88);
 uint32_t SKY   = strip.Color(0, 168, 165);
 
+uint32_t all_colors[] = {WHITE, RED, GREEN, BLUE, YELLOW, MAGENTA, CYAN, ROSE, ORANGE, LIME, VIOLET, TEAL, COBALT, PURPLE, PLUM, BERRY, SKY};
+
 
 
