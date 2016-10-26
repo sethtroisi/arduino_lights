@@ -9,7 +9,7 @@
 
 // TODO(ERIN): move to LIGHT_CONFIG
 #define NUM_TWINKLES 1
-#define TWINKLE_LENGTH_MS 20
+#define TWINKLE_LENGTH_MS 100
 #define MAX_DELAY_MS    50
 
 #define num_elements(x)  (sizeof(x) / sizeof((x)[0]))
@@ -35,19 +35,20 @@ void loop() {
       twinkle_location[set_twinkle] = 10;
       }
 
-    for (int l = 0; l < NUM_LIGHTS; l++) {
-        if (twinkle_location[l] > 0) {
-          uint32_t picker = l % (num_elements(cool_colors));
+    for (int light = 0; light < NUM_LIGHTS; light++) {
+        if (twinkle_location[light] > 0) {
+          uint32_t picker = light % (num_elements(cool_colors));
           uint32_t light_color = cool_colors[picker];
-          uint32_t fade_color = LinearColorFade(light_color, BLACK, pow(twinkle_location[l]/10, 0.33));
-          strip.setPixelColor(l, fade_color);
+          uint32_t fade_color = LinearColorFade(light_color, BLACK, pow(twinkle_location[light]/10.0, 0.33));
+          strip.setPixelColor(light, fade_color);
           delay(TWINKLE_LENGTH_MS);
-          twinkle_location[l] -= 1;
+          twinkle_location[light] -= 1;
         } else {
-          strip.setPixelColor(l, BLACK);
+          strip.setPixelColor(light, BLACK);
         }
-        strip.show(); 
+         
      }
+     strip.show();
      delay(random(MAX_DELAY_MS)); 
   }
 
