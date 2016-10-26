@@ -7,30 +7,29 @@
 */
 /**************************************************************************/
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN_NUMBER, NEO_GRB + NEO_KHZ800);
 
-uint32_t BLACK  = strip.Color(0, 0, 0);
-uint32_t WHITE  = strip.Color(255, 255, 255);
+uint32_t BLACK  = Adafruit_NeoPixel::Color(0, 0, 0);
+uint32_t WHITE  = Adafruit_NeoPixel::Color(255, 255, 255);
 
-uint32_t RED      = strip.Color(255, 0, 0);
-uint32_t GREEN    = strip.Color(0, 255, 0);
-uint32_t BLUE     = strip.Color(0, 0, 255);
+uint32_t RED      = Adafruit_NeoPixel::Color(255, 0, 0);
+uint32_t GREEN    = Adafruit_NeoPixel::Color(0, 255, 0);
+uint32_t BLUE     = Adafruit_NeoPixel::Color(0, 0, 255);
 
-uint32_t YELLOW   = strip.Color(255, 255, 0);
-uint32_t MAGENTA   = strip.Color(255, 0, 255);
-uint32_t CYAN   = strip.Color(0, 255, 255);
+uint32_t YELLOW   = Adafruit_NeoPixel::Color(255, 255, 0);
+uint32_t MAGENTA   = Adafruit_NeoPixel::Color(255, 0, 255);
+uint32_t CYAN   = Adafruit_NeoPixel::Color(0, 255, 255);
 
-uint32_t ROSE   = strip.Color(255, 0, 200);
-uint32_t ORANGE   = strip.Color(255, 200, 0);
-uint32_t LIME   = strip.Color(200, 255, 0);
-uint32_t VIOLET   = strip.Color(200, 0, 255);
-uint32_t TEAL   = strip.Color(0, 255, 200);
-uint32_t COBALT   = strip.Color(0, 200, 255);
+uint32_t ROSE   = Adafruit_NeoPixel::Color(255, 0, 200);
+uint32_t ORANGE   = Adafruit_NeoPixel::Color(255, 200, 0);
+uint32_t LIME   = Adafruit_NeoPixel::Color(200, 255, 0);
+uint32_t VIOLET   = Adafruit_NeoPixel::Color(200, 0, 255);
+uint32_t TEAL   = Adafruit_NeoPixel::Color(0, 255, 200);
+uint32_t COBALT   = Adafruit_NeoPixel::Color(0, 200, 255);
 
-uint32_t PURPLE   = strip.Color(80, 0, 220);
-uint32_t PLUM   = strip.Color(150, 0, 204);
-uint32_t BERRY   = strip.Color(219, 0, 88);
-uint32_t SKY   = strip.Color(0, 168, 165);
+uint32_t PURPLE   = Adafruit_NeoPixel::Color(80, 0, 220);
+uint32_t PLUM   = Adafruit_NeoPixel::Color(150, 0, 204);
+uint32_t BERRY   = Adafruit_NeoPixel::Color(219, 0, 88);
+uint32_t SKY   = Adafruit_NeoPixel::Color(0, 168, 165);
 
 uint32_t all_colors[] = {WHITE, RED, GREEN, BLUE, YELLOW, MAGENTA, CYAN, ROSE, ORANGE, LIME, VIOLET, TEAL, COBALT, PURPLE, PLUM, BERRY, SKY};
 
