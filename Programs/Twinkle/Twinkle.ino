@@ -7,7 +7,7 @@
 #define BRIGHTNESS  LIGHT_CONFIG_BRIGHTNESS
 
 // TODO(ERIN): move to LIGHT_CONFIG
-#define NUM_TWINKLES 10
+#define NUM_TWINKLES 8
 #define TWINKLE_LENGTH_MS 20
 #define MAX_DELAY_MS    50
 
@@ -31,13 +31,13 @@ void loop() {
     for (int t = 0; t < NUM_TWINKLES; t += 1) {
       // Set a "twinkle" at random points on twinkle_location for each pass of loop
       int set_twinkle = random(NUM_LIGHTS);
-      int twinkle_location[set_twinkle] = 1
+      twinkle_location[set_twinkle] = 1;
       }
 
     for (int l = 0; l < NUM_LIGHTS; l++) {
         if (twinkle_location[l] == 1) {
-          uint32_t picker = random(num_elements(all_colors););
-          uint32_t light_color = all_colors[picker];
+          uint32_t picker = random(num_elements(cool_colors));
+          uint32_t light_color = cool_colors[picker];
           strip.setPixelColor(l, light_color);
           delay(TWINKLE_LENGTH_MS);
           twinkle_location[l] = 0;
