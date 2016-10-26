@@ -33,6 +33,6 @@ uint32_t SKY   = Adafruit_NeoPixel::Color(0, 168, 165);
 
 uint32_t all_colors[] = {WHITE, RED, GREEN, BLUE, YELLOW, MAGENTA, CYAN, ROSE, ORANGE, LIME, VIOLET, TEAL, COBALT, PURPLE, PLUM, BERRY, SKY};
 
-uint32_t cool_colors[] = {GREEN, BLUE, CYAN, LIME, VIOLET, TEAL, COBALT, PURPLE, PLUM, SKY};
+uint32_t cool_colors[] = {GREEN, BLUE, CYAN, VIOLET, TEAL, COBALT, PURPLE, PLUM, SKY};
 
 uint32_t warm_colors[] = {RED, YELLOW, MAGENTA, ROSE, ORANGE, BERRY};
