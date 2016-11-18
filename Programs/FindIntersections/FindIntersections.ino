@@ -154,5 +154,5 @@ uint32_t LinearColorFade(uint32_t color_a, uint32_t color_b, float percent) {
   int16_t new_g = round(g_a + g_diff * percent);
   int16_t new_b = round(b_a + b_diff * percent);
 
-  return strip.Color(new_r, new_g, new_b);
+  return Adafruit_NeoPixel::Color(new_r, new_g, new_b);
 }

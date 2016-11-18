@@ -9,7 +9,7 @@
 
 // TODO(ERIN): move to LIGHT_CONFIG
 #define NUM_TWINKLES 1
-#define TWINKLE_LENGTH_MS 20 
+#define TWINKLE_LENGTH_MS 100
 #define MAX_DELAY_MS    50
 
 #define num_elements(x)  (sizeof(x) / sizeof((x)[0]))
@@ -52,7 +52,7 @@ void loop() {
       strip.setPixelColor(l, BLACK);
     }
   }
-  strip.show(); 
+  strip.show();
   delay(random(MAX_DELAY_MS));
 }
 
