@@ -15,4 +15,4 @@
 */
 /**************************************************************************/
 
-#include "LightConfig_erin.h"
+#include "LightConfig_seth.h"
