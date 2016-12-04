@@ -9,7 +9,7 @@
 
 // TODO(ERIN): move to LIGHT_CONFIG
 #define NUM_TWINKLES 15
-#define DELAY_MS    120
+#define DELAY_MS    25
 
 #define num_elements(x)  (sizeof(x) / sizeof((x)[0]))
 
@@ -25,35 +25,33 @@ void setup() {
   strip.show(); // Initialize all pixels to 'off'
 }
 
-int iterations = 0;
-void loop() {
-  if (iterations == 20) {
-      // Set a "twinkle" at random points on twinkle_location for each pass of loop
-      int set_twinkle = random(NUM_LIGHTS);
-      twinkle_location[set_twinkle] = 19;
-      iterations = 0;
-    }
-    else {
-      iterations += 1;
-    }
+double minDensity = 0.008;
+double maxDensity = 0.2;
+double densityStep = 0.04;
+double density = minDensity;
 
-//  for (int t = 0; t < random(2 * NUM_TWINKLES); t += 1) {
-//    if (iterations == 20) {
-//      // Set a "twinkle" at random points on twinkle_location for each pass of loop
-//      int set_twinkle = random(NUM_LIGHTS);
-//      twinkle_location[set_twinkle] = 19;
-//      iterations = 0;
-//    }
-//    else {
-//      iterations += 1;
-//    }
-//
-//  }
+void loop() {
+  if (density > maxDensity) {
+    density = maxDensity;
+    densityStep *= -1;
+  }
+  else if (density < minDensity) {
+    density = minDensity;
+    densityStep *= -1;
+  }
+
+  density += density * densityStep;
+
+  for (int x = 0; x < NUM_LIGHTS; x++) {
+    if (random(10000) < density / 20 * 10000 && twinkle_location[x] == 0) {
+      twinkle_location[x] = 19;
+    }
+  }
 
   for (int light = 0; light < NUM_LIGHTS; light++) {
     if (twinkle_location[light] > 0) {
-      uint32_t picker = light % (num_elements(cool_colors));
-      uint32_t light_color = cool_colors[picker];
+      uint32_t picker = light % (num_elements(xmas_colors));
+      uint32_t light_color = xmas_colors[picker];
       uint32_t fade_color;
       if (twinkle_location[light] > 15) {
         fade_color = LinearColorFade(BLACK, light_color, pow(((20 - twinkle_location[light])) / 5.0, 2));

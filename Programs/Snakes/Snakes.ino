@@ -7,7 +7,7 @@
 #define BRIGHTNESS  LIGHT_CONFIG_BRIGHTNESS
 
 // TODO(ERIN): move to LIGHT_CONFIG
-#define NUM_SNAKES  9
+#define NUM_SNAKES  3
 #define TAILS       7
 #define DELAY_MS    50
 
