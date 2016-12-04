@@ -72,6 +72,7 @@ void loop() {
 }
 
 
+
 // Return colors that is a blend of a and b.
 // a * (1 - percent) + b * (percent);
 //
