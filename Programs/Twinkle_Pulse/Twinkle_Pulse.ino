@@ -39,7 +39,6 @@ void loop() {
     density = minDensity;
     densityStep *= -1;
   }
-  
 
   density += density * densityStep;
 
