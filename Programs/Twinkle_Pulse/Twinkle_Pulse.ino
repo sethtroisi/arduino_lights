@@ -14,6 +14,10 @@
 #define num_elements(x)  (sizeof(x) / sizeof((x)[0]))
 
 char twinkle_location[NUM_LIGHTS] = {};
+double minDensity = 0.008;
+double maxDensity = 0.2;
+double densityStep = 0.02;
+
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN_NUMBER, NEO_GRB + NEO_KHZ800);
 
@@ -25,9 +29,6 @@ void setup() {
   strip.show(); // Initialize all pixels to 'off'
 }
 
-double minDensity = 0.008;
-double maxDensity = 0.2;
-double densityStep = 0.04;
 double density = minDensity;
 
 void loop() {
