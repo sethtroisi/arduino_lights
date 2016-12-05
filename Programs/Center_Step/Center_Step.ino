@@ -8,7 +8,7 @@
 #define BRIGHTNESS  LIGHT_CONFIG_BRIGHTNESS
 
 // TODO(ERIN): move to LIGHT_CONFIG
-#define DELAY_MS   80
+#define DELAY_MS   90
 
 #define num_elements(x)  (sizeof(x) / sizeof((x)[0]))
 
@@ -35,10 +35,6 @@ void loop() {
   int num_arcs = num_elements(start_arc_index);
   int start_point_arc[num_arcs] = {};
   
-  int circle_size = end_circle_index[1] - end_circle_index[1];
-  int num_circles = num_elements(start_circle_index);
-  int start_point_circle[num_circles] = {};
-  
   for (int a = 0; a < 100; a++) {
     
     for (int y = 0; y < arc_size; y++) {
@@ -47,37 +43,16 @@ void loop() {
         strip.setPixelColor(start_arc_index[x] + y, xmas_colors[a % num_elements(xmas_colors)]);
       }
       strip.show();
-    delay(DELAY_MS);
-  
+      delay(DELAY_MS);
     }
+
+      
+  } // int a loop close
     
     
-  }
-
-}
+} // void loop close
 
 
 
 
-// Return colors that is a blend of a and b.
-// a * (1 - percent) + b * (percent);
-//
-uint32_t LinearColorFade(uint32_t color_a, uint32_t color_b, float percent) {
-  uint32_t r_a = (uint8_t)(color_a >> 16);
-  uint32_t r_b = (uint8_t)(color_b >> 16);
-  int16_t r_diff = r_b - r_a;
 
-  uint32_t g_a = (uint8_t)(color_a >> 8);
-  uint32_t g_b = (uint8_t)(color_b >> 8);
-  int16_t g_diff = g_b - g_a;
-
-  uint32_t b_a = (uint8_t)(color_a);
-  uint32_t b_b = (uint8_t)(color_b);
-  int16_t b_diff = b_b - b_a;
-
-  int16_t new_r = round(r_a + r_diff * percent);
-  int16_t new_g = round(g_a + g_diff * percent);
-  int16_t new_b = round(b_a + b_diff * percent);
-
-  return Adafruit_NeoPixel::Color(new_r, new_g, new_b);
-}
