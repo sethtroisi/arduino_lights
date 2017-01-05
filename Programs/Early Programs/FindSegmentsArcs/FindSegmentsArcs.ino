@@ -1,4 +1,6 @@
 #include <Adafruit_NeoPixel.h>
+#include <LightConfig.h>
+#include <Colors.h>
 
 #define PIN_NUMBER 3
 #define NUM_LIGHTS 300
@@ -11,14 +13,7 @@
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LIGHTS, PIN_NUMBER, NEO_GRB + NEO_KHZ800);
 
-// Definition of some Colors which are used multiple times
-uint32_t RED    = strip.Color(255, 0, 0);
-uint32_t GREEN  = strip.Color(0, 255, 0);
-uint32_t BLUE   = strip.Color(0, 0, 255);
-uint32_t PURPLE = strip.Color(32, 0, 88);
 
-uint32_t BLACK  = strip.Color(0, 0, 0);
-uint32_t WHITE  = strip.Color(255, 255, 255);
 
 
 // List (called Array in C) containing index of the first LED in each circle
@@ -44,7 +39,7 @@ void loop() {
       if (iteration % 2 == 0) {
         strip.setPixelColor(led_index, RED);
       } else {
-        strip.setPixelColor(led_index, BLUE);
+        strip.setPixelColor(led_index, WHITE);
       }
     }
   }
@@ -64,13 +59,13 @@ void loop() {
         strip.setPixelColor(j, BLACK);
       }
 
-      strip.setPixelColor(start_index, PURPLE);
-      strip.setPixelColor(end_index, PURPLE);
+      strip.setPixelColor(start_index, BLACK);
+      strip.setPixelColor(end_index, BLACK);
 
       // Which LED in the circle to light up.
       int current_circle_index = i % num_leds;
       
-      strip.setPixelColor(start_index + current_circle_index, WHITE);
+      strip.setPixelColor(start_index + current_circle_index, xmas_colors);
     }
 
     strip.show(); 
