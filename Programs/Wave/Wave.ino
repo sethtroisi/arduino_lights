@@ -79,13 +79,13 @@ int iteration = 0;
 void loop() {
   iteration += 1;
 
-  if (iteration % 400 == 1) { // || random(1000) == 0) {
+  if (iteration % 200 == 1) { // || random(1000) == 0) {
     // Set line_m to [-4, 4]
-    // Set line_b_inc to [-5, 5] / 1000
+    // Set line_b_inc to [-5, 5] / 200
 
     line_m = 8 * randomFloat() - 4;
-    line_b = -1.1; // 0
-    line_b_inc = 0.006; // (10 * randomFloat() - 5) / 1000.0;
+    line_b = 0;
+    line_b_inc = (10 * randomFloat() - 5) / 50.0;
 
     cur_color = all_colors[random(num_elements(all_colors))];
   }
@@ -97,8 +97,7 @@ void loop() {
     cord cords = getCords(l);
 
     uint32_t color = BLACK;
-//    if (cords.y < cords.x * line_m + line_b) {
-    if (cords.x > line_b) {
+    if (cords.y < cords.x * line_m + line_b) {
       color = cur_color;
     };
 
